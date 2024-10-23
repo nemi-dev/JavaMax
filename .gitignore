@@ -215,7 +215,6 @@ replay_pid*
 # KDE directory preferences
 .directory
 
-# Linux trash folder which might appear on get partition or disk
 .Trash-*
 
 # .nfs files are created when an open file is removed but is still being accessed
