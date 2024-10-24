@@ -20,11 +20,42 @@ public class Person {
   public String getName() { return name; }
   public void setName(String name) { this.name = name; }
 
+  public String getContactOf(String contactType) {
+    return contacts.getOrDefault(contactType, null);
+  }
+
+  public void updateContact(String type, String value) {
+    contacts.put(type, value);
+  }
+
+  public void deleteContact(String type) {
+    contacts.remove(type);
+  }
+
+  public int contacts() {
+    return contacts.size();
+  }
+
   @Override
   public String toString() {
-    final int contactsSize = contacts.size();
-    String usePlural = contactsSize > 1 ? "s" : "";
-    return String.format("%-16s\t<%d contact%s>", name, contactsSize, usePlural);
+    StringBuilder sb = new StringBuilder("[ " + name + " ]");
+    int unresolvedContactCount = contacts.size();
+    if (contacts.containsKey("email")) {
+      sb.append(String.format(" <%s>", contacts.get("email")));
+      unresolvedContactCount -= 1;
+    }
+    if (contacts.containsKey("phone")) {
+      sb.append(String.format(" <phone:%s>", contacts.get("phone")));
+      unresolvedContactCount -= 1;
+    }
+    for (Map.Entry<String, String> entry : contacts.entrySet()) {
+      if (sb.length() > 45) break;
+      String key = entry.getKey();
+      if (key.equals("phone") || key.equals("email")) continue;
+      sb.append(String.format(" <%s:%s>", key, entry.getValue()));
+    }
+    if (unresolvedContactCount > 0) sb.append(String.format(" (+%d more)", unresolvedContactCount));
+    return sb.toString();
   }
 
   public String verbose() {
@@ -37,11 +68,13 @@ public class Person {
     return builder.toString();
   }
 
+  public Set<String> getContactTypes() { return contacts.keySet(); }
+
   public Set<ContactSearchResult> findContact(String find) {
     Set<ContactSearchResult> found = new HashSet<>();
     for (Map.Entry<String, String> entry : contacts.entrySet()) {
       if (entry.getValue().contains(find)) {
-        found.add(new ContactSearchResult(name, entry.getKey(), entry.getValue()));
+        found.add(new ContactSearchResult(this, name, entry.getKey(), entry.getValue()));
       }
     }
     return found;
