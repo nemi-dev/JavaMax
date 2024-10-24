@@ -136,7 +136,7 @@ public final class ContactApp {
       int i = random.nextInt(contacts.size());
       Person pick = contacts.values().stream().toList().get(i);
       System.out.println(pick);
-      input = Prompt.choose("Another one?", "yes", boolean_options);
+      input = Prompt.choose("Another one? (yes/no) ", "yes", boolean_options);
     } while (input.equals("yes"));
 
   }
@@ -174,11 +174,10 @@ public final class ContactApp {
   }
 
   void updateContactScreen(Person person) {
-    Set<String> ct = person.getContactTypes();
     System.out.println("=== [ Update Contact ] ===");
     String contactType = Prompt.choose(
       "Type the name of \"contact type\" (e.g. \"phone\"), leave blank to go back.",
-      "", ct
+      "", person.getContactTypes()
     );
     if (contactType.isEmpty()) return;
 
