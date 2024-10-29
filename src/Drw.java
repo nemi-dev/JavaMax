@@ -9,11 +9,19 @@ public class Drw extends JFrame {
     this.setSize(1000, 800);
 
     DrawingBoardYeah board = new DrawingBoardYeah();
-    JPanel tools = new DrawingToolsYeah();
 
     this.setLayout(null);
     this.add(board);
-    this.add(tools);
+    this.add(new JPanel(){{
+      this.setSize(1000, 160);
+      this.setLocation(0, 640);
+      this.setLayout(new FlowLayout());
+      this.add(new JLabel("Q : 직선"));
+      this.add(new JLabel("W : 사각형"));
+      this.add(new JLabel("E : 원"));
+      this.add(new JLabel("R : 연필"));
+      this.add(new JLabel("Ctrl+Z : 마지막 그림 지우기"));
+    }});
     this.setVisible(true);
     this.addKeyListener(new KeyAdapter() {
       @Override
