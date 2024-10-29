@@ -1,3 +1,5 @@
+package mutalisk;
+
 import javax.swing.event.DocumentEvent;
 
 public interface DocumentCallback {

@@ -1,3 +1,5 @@
+package mutalisk;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -11,7 +13,7 @@ public class Mutalisk extends JFrame {
   private final JLabel headLabel = new JLabel("Title goes here");
   private final MutaliskTextField headEdit = new MutaliskTextField("Title goes here");
   private final JList<String> list = new JList<>();
-  private final MutaliskTextArea textarea = new MutaliskTextArea();
+  private final MutaliskTextArea textarea = new MutaliskTextArea("");
   private boolean modified = false;
   private JButton addButton;
   private JButton randomButton;
@@ -199,7 +201,7 @@ public class Mutalisk extends JFrame {
 
   public Mutalisk() {
 
-    this.setTitle("Mutalisk");
+    this.setTitle("mutalisk.Mutalisk");
     this.setSize(700, 400);
     GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
