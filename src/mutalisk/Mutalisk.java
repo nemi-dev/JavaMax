@@ -11,9 +11,9 @@ public class Mutalisk extends JFrame {
   private String currentKey;
   private final JPanel root = new JPanel();
   private final JLabel headLabel = new JLabel("Title goes here");
-  private final MutaliskTextField headEdit = new MutaliskTextField("Title goes here");
+  private final MutalTextWrapper<JTextField> headEdit = new MutalTextWrapper<>(new JTextField("Title goes here"));
   private final JList<String> list = new JList<>();
-  private final MutaliskTextArea textarea = new MutaliskTextArea("");
+  private final MutalTextWrapper<JTextArea> textarea = new MutalTextWrapper<>(new JTextArea(""));
   private boolean modified = false;
   private JButton addButton;
   private JButton randomButton;
@@ -28,7 +28,7 @@ public class Mutalisk extends JFrame {
 
   private void invokeSelect(String key) {
     if (modified) {
-      dict.set(currentKey, textarea.getText());
+      dict.set(currentKey, textarea.jtc.getText());
       modified = false;
     }
     currentKey = key;
@@ -36,7 +36,7 @@ public class Mutalisk extends JFrame {
     headEdit.setText(key, true);
     this.setTitle(key);
     textarea.setText(dict.get(key), true);
-    textarea.setEditable(true);
+    textarea.jtc.setEditable(true);
     editTitleButton.setEnabled(true);
     deleteButton.setEnabled(true);
   }
@@ -59,7 +59,7 @@ public class Mutalisk extends JFrame {
   }
 
   private boolean checkValidTitle() {
-    String s = headEdit.getText().trim();
+    String s = headEdit.jtc.getText().trim();
     if (s.isEmpty()) {
       JOptionPane.showMessageDialog(this, "Title must not be empty!", "Error", JOptionPane.ERROR_MESSAGE);
       return false;
@@ -77,7 +77,7 @@ public class Mutalisk extends JFrame {
 
   private void startHeaderEdit() {
     root.remove(headLabel);
-    root.add(headEdit, BorderLayout.NORTH);
+    root.add(headEdit.jtc, BorderLayout.NORTH);
     editTitleButton.setText("Confirm Change");
     list.setEnabled(false);
     randomButton.setEnabled(false);
@@ -92,7 +92,7 @@ public class Mutalisk extends JFrame {
     if (update) {
       if (!checkValidTitle()) return;
 
-      String s = headEdit.getText().trim();
+      String s = headEdit.jtc.getText().trim();
       if (!s.equals(currentKey)) {
         headLabel.setText(s);
         dict.move(currentKey, s);
@@ -103,7 +103,7 @@ public class Mutalisk extends JFrame {
     } else {
       headEdit.setText(headLabel.getText());
     }
-    root.remove(headEdit);
+    root.remove(headEdit.jtc);
     root.add(headLabel, BorderLayout.NORTH);
     editTitleButton.setText("Edit Title");
     list.setEnabled(true);
@@ -121,17 +121,17 @@ public class Mutalisk extends JFrame {
     headLabel.setHorizontalAlignment(JLabel.CENTER);
     headLabel.setFont(headLabel.getFont().deriveFont(20f));
 
-    headEdit.setHorizontalAlignment(JTextField.CENTER);
-    headEdit.setFont(headEdit.getFont().deriveFont(20f));
+    headEdit.jtc.setHorizontalAlignment(JTextField.CENTER);
+    headEdit.jtc.setFont(headEdit.jtc.getFont().deriveFont(20f));
     headEdit.onChange(v -> {
-      String s = headEdit.getText().trim();
+      String s = headEdit.jtc.getText().trim();
       if (!s.equals(currentKey) && dict.has(s) || s.contains(",")) {
-        headEdit.setForeground(Color.RED);
+        headEdit.jtc.setForeground(Color.RED);
       } else {
-        headEdit.setForeground(Color.BLACK);
+        headEdit.jtc.setForeground(Color.BLACK);
       }
     });
-    headEdit.addActionListener(e -> {
+    headEdit.jtc.addActionListener(e -> {
       endHeaderEdit(true);
     });
 
@@ -147,10 +147,10 @@ public class Mutalisk extends JFrame {
       if (sel != null) invokeSelect(sel);
     });
 
-    textarea.setLineWrap(true);
-    textarea.setEditable(false);
+    textarea.jtc.setLineWrap(true);
+    textarea.jtc.setEditable(false);
     textarea.onChange(e -> modified = true);
-    root.add(textarea, BorderLayout.CENTER);
+    root.add(textarea.jtc, BorderLayout.CENTER);
 
     JPanel controller = new JPanel();
     controller.setLayout(new FlowLayout());
@@ -180,7 +180,7 @@ public class Mutalisk extends JFrame {
         modified = false;
         list.clearSelection();
         updateList();
-        textarea.setEditable(false);
+        textarea.jtc.setEditable(false);
         textarea.setText("", true);
         headLabel.setText(currentKey + " has gone...");
         addButton.setEnabled(true);
@@ -213,7 +213,7 @@ public class Mutalisk extends JFrame {
     updateList();
     this.setVisible(true);
 
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> dict.set(currentKey, textarea.getText())));
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> dict.set(currentKey, textarea.jtc.getText())));
   }
 
   public static void main(String[] args) {
